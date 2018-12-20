@@ -74,17 +74,24 @@ class Registration extends Component {
                 .then(createUser => {
                     console.log(createUser);
                 })
-                .catch(error => {
-                    console.log(error);
+                .catch(err => {
+                    console.log(err);
+                    this.setState({
+                        errors: this.state.errors.concat(err)
+                    })
                 })
         }
     }
 
+    handleInput = (errors, inputName) => {
+        // console.log('object');
+        return errors.some(el => el.message.toLowerCase().includes(inputName)) ? 'error' : '';
+    }
 
 
 
     render() {
-        const { errors } = this.state;
+        const { errors, username, password, email, passwordConfirm } = this.state
         return (
             <Grid textAlign='center' verticalAlign='middle' className='app'>
                 <Grid.Column style={{ maxWidth: 450 }}>
@@ -95,10 +102,10 @@ class Registration extends Component {
                 </Header>
                     <Form size='large' onSubmit={this.handleSubmit}>
                         <Segment stacked>
-                            <Form.Input fluid name='username' icon='user' iconPosition='left' placeholder='Username' type='text' onChange={this.handleChange} />
-                            <Form.Input fluid name='email' icon='mail' iconPosition='left' placeholder='Email' type='email' onChange={this.handleChange} />
-                            <Form.Input fluid name='password' icon='lock' iconPosition='left' placeholder='Password' type='password' onChange={this.handleChange} />
-                            <Form.Input fluid name='passwordConfirm' icon='repeat' iconPosition='left' placeholder='Password Confirm' type='password' onChange={this.handleChange} />
+                            <Form.Input className={this.handleInput(errors, 'username')} fluid name='username' icon='user' iconPosition='left' placeholder='Username' type='text' onChange={this.handleChange} />
+                            <Form.Input className={this.handleInput(errors, 'email')} fluid name='email' icon='mail' iconPosition='left' placeholder='Email' type='email' onChange={this.handleChange} />
+                            <Form.Input className={this.handleInput(errors, 'password')} fluid name='password' icon='lock' iconPosition='left' placeholder='Password' type='password' onChange={this.handleChange} />
+                            <Form.Input className={this.handleInput(errors, 'passwordConfirm')} fluid name='passwordConfirm' icon='repeat' iconPosition='left' placeholder='Password Confirm' type='password' onChange={this.handleChange} />
                             <Button color='grey' fluid size='large'>Submit</Button>
 
                         </Segment>
