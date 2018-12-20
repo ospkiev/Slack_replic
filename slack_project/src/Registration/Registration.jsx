@@ -10,6 +10,7 @@ class Registration extends Component {
         email: '',
         password: '',
         passwordConfirm: '',
+        errors: [],
     }
 
     handleChange = (e) => {
@@ -20,22 +21,70 @@ class Registration extends Component {
         })
     }
 
-    handleSubmit = (e) => {
-        e.preventDefault();
-        firebase
-            .auth()
-            .createUserWithEmailAndPassword(this.state.email, this.state.password)
-            .then(createUser => {
-                console.log(createUser);
+
+
+    isFormEmpty = ({ username, email, password, passwordConfirm }) => {
+        if (username.length > 0 && email.length > 0 && password.length > 0 && passwordConfirm.length > 0) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    isPasswordValid = ({ password, passwordConfirm }) => {
+        if (password === passwordConfirm) {
+            return true;
+        } else {
+            return false;
+        }
+    }
+
+    isFormValid = () => {
+        let errors = [];
+        let error;
+
+        if (!this.isFormEmpty(this.state)) {
+            error = {
+                message: 'Fill all fields'
+            };
+            this.setState({
+                errors: errors.concat(error)
             })
-            .catch(error => {
-                console.log(error);
+            return false;
+        } else if (!this.isPasswordValid(this.state)) {
+            error = {
+                message: 'Password is invalid'
+            };
+            this.setState({
+                errors: errors.concat(error)
             })
+            return false;
+        } else {
+            return true;
+        }
     }
 
 
-    render() {
+    handleSubmit = (e) => {
+        if (this.isFormValid()) {
+            e.preventDefault();
+            firebase
+                .auth()
+                .createUserWithEmailAndPassword(this.state.email, this.state.password)
+                .then(createUser => {
+                    console.log(createUser);
+                })
+                .catch(error => {
+                    console.log(error);
+                })
+        }
+    }
 
+
+
+
+    render() {
+        const { errors } = this.state;
         return (
             <Grid textAlign='center' verticalAlign='middle' className='app'>
                 <Grid.Column style={{ maxWidth: 450 }}>
@@ -55,6 +104,12 @@ class Registration extends Component {
                         </Segment>
 
                     </Form>
+                    {errors.length > 0 && (
+                        <Message error>
+                            <h3>Error</h3>
+                            {errors.map(el => <p key={el.message}>{el.message}</p>)}
+                        </Message>
+                    )}
                     <Message>
                         Already a user?
                     <NavLink to='/Login'>Login</NavLink>
