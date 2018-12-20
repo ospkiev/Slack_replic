@@ -2,7 +2,8 @@ import React, { Component } from 'react';
 import { NavLink } from 'react-router-dom';
 import { Grid, Form, Segment, Button, Header, Message, Icon } from 'semantic-ui-react';
 import firebase from '../Firebase/Firebase';
-import { auth } from 'firebase';
+import md5 from 'md5';
+// import { auth } from 'firebase';
 
 class Registration extends Component {
     state = {
@@ -11,6 +12,7 @@ class Registration extends Component {
         password: '',
         passwordConfirm: '',
         errors: [],
+        userRef: firebase.database().ref('users')
     }
 
     handleChange = (e) => {
@@ -64,6 +66,13 @@ class Registration extends Component {
         }
     }
 
+    saveUser = createdUser => {
+        return this.state.userRef.child(createdUser.user.uid).set({
+            name: createdUser.user.displayName,
+            avatar: createdUser.user.photoURL,
+        })
+    }
+
 
     handleSubmit = (e) => {
         if (this.isFormValid()) {
@@ -71,17 +80,34 @@ class Registration extends Component {
             firebase
                 .auth()
                 .createUserWithEmailAndPassword(this.state.email, this.state.password)
-                .then(createUser => {
-                    console.log(createUser);
-                })
-                .catch(err => {
-                    console.log(err);
-                    this.setState({
-                        errors: this.state.errors.concat(err)
+                .then(createdUser => {
+                    console.log(createdUser);
+                    createdUser.user.updateProfile({
+                        displayName: this.state.username,
+                        photoURL: `http://gravatar.com/avatar/${md5(createdUser.user.email)}?d=identicon`
                     })
+
+                        .then(() => {
+                            this.saveUser(createdUser).then(() => console.log('user seved'))
+                        })
+
+                        .catch(err => {
+                            console.log(err);
+                            this.setState({
+                                errors: this.state.errors.concat(err)
+                            })
+
+                        })
+                        .catch(err => {
+                            console.log(err);
+                            this.setState({
+                                errors: this.state.errors.concat(err)
+                            })
+                        })
                 })
         }
     }
+
 
     handleInput = (errors, inputName) => {
         // console.log('object');
@@ -97,7 +123,7 @@ class Registration extends Component {
                 <Grid.Column style={{ maxWidth: 450 }}>
 
                     <Header textAlign='center' icon color='orange' as='h2'>
-                        <Icon name='commet alternate' color='orange' />
+                        <Icon name='comment alternate' color='orange' />
                         Register For Slack Replic
                 </Header>
                     <Form size='large' onSubmit={this.handleSubmit}>
