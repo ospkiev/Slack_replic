@@ -1,14 +1,26 @@
 import React, { Component } from 'react';
+import MetaPanel from './MarkUp/metaPanel/MetaPanel';
+import SidePanel from './MarkUp/sidePanel/SidePanel';
+import ColorPanel from './MarkUp/colorPanel/ColorPanel';
+import Message from './MarkUp/message/Message';
 import './App.css';
+import { Grid } from 'semantic-ui-react';
 
 class App extends Component {
   render() {
     return (
-      <div>
-        App
-      </div>
-    );
-  }
-}
+      <Grid columns='equal' className='app'>
+        <ColorPanel />
+        <SidePanel />
+        <Grid.Column textAlign='center'>
+          <Message />
+        </Grid.Column>
+        <Grid.Column width={4}>
+          <MetaPanel />
+        </Grid.Column>
+      </Grid>
+    )
+  };
+};
 
 export default App;
