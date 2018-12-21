@@ -1,5 +1,7 @@
 import React, { Component } from 'react';
-import { Dropdown, Header, Icon, Grid, } from 'semantic-ui-react';
+import { Image, Dropdown, Header, Icon, Grid, } from 'semantic-ui-react';
+import { connect } from 'react-redux';
+import { withRouter } from 'react-router-dom';
 import firebase from '../../Firebase/Firebase';
 
 
@@ -45,12 +47,35 @@ class UserPanel extends Component {
                         </Header>
                     </Grid.Row>
                     <Header style={{ padding: '0.25rem' }} as='h4' inverted>
-                        <Dropdown trigger={<span>User</span>} options={this.dropdownOptions()} />
+                        <Dropdown trigger={<span style={{ marginleft: '1rem' }}> <Image src={this.props.img} spaced='right' avatar />{this.props.name}</span>} options={this.dropdownOptions()} />
                     </Header>
                 </Grid.Column>
-            </Grid>
+            </Grid >
         );
     }
 }
 
-export default UserPanel;
+function mapStateToProps(state) {
+    return {
+        img: state.user.currentUser.photoURL,
+        name: state.user.currentUser.displayName,
+    }
+}
+
+
+// function mapDispatchToProps(dispatch) {
+//     return {
+//         setUser: function (user) {
+//             dispatch(setUser(user))
+
+//         },
+
+//         signOutUser: function () {
+//             dispatch(signOutUser())
+
+//         },
+
+//     }
+// }
+
+export default withRouter(connect(mapStateToProps, null)(UserPanel));

@@ -18,8 +18,9 @@ class Root extends Component {
                 this.props.history.push('/');
             } else {
                 console.log('sign out');
-                this.props.signOutUser();
                 this.props.history.push('/login');
+                this.props.signOutUser();
+
 
 
             }
@@ -53,8 +54,8 @@ function mapDispatchToProps(dispatch) {
 
         },
 
-        signOutUser: function () {
-            dispatch(signOutUser())
+        signOutUser: function (user) {
+            dispatch(signOutUser(user))
 
         },
 
