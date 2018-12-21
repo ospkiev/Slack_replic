@@ -5,6 +5,7 @@ import { connect } from 'react-redux';
 import { setUser } from '../Redux/Actions/setUserAction';
 import Registration from '../Registration/Registration';
 import Login from '../Login/Login';
+import Spiner from '../Spinner/Spinner';
 import App from '../App';
 
 
@@ -22,7 +23,7 @@ class Root extends Component {
 
 
     render() {
-        return (
+        return this.props.isLoading ? <Spiner /> : (
             <Switch>
                 <Route exact path='/' component={App} />
                 <Route path='/login' component={Login} />
@@ -32,11 +33,11 @@ class Root extends Component {
     }
 }
 
-// function mapStateToProps(state) {
-//     return {
-//         isLoading: state.user.isLoading,
-//     }
-// }
+function mapStateToProps(state) {
+    return {
+        isLoading: state.user.isLoading,
+    }
+}
 
 function mapDispatchToProps(dispatch) {
     return {
@@ -47,4 +48,4 @@ function mapDispatchToProps(dispatch) {
     }
 }
 
-export default withRouter(connect(null, mapDispatchToProps)(Root));
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Root));
