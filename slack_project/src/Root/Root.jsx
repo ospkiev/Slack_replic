@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import firebase from '../Firebase/Firebase';
 import { Switch, Route, withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
-import { setUser } from '../Redux/Actions/setUserAction';
+import { setUser, signOutUser } from '../Redux/Actions/setUserAction';
 import Registration from '../Registration/Registration';
 import Login from '../Login/Login';
 import Spiner from '../Spinner/Spinner';
@@ -16,6 +16,12 @@ class Root extends Component {
                 console.log(user);
                 this.props.setUser(user);
                 this.props.history.push('/');
+            } else {
+                console.log('sign out');
+                this.props.signOutUser();
+                this.props.history.push('/login');
+
+
             }
         })
     }
@@ -39,12 +45,19 @@ function mapStateToProps(state) {
     }
 }
 
+
 function mapDispatchToProps(dispatch) {
     return {
         setUser: function (user) {
             dispatch(setUser(user))
 
         },
+
+        signOutUser: function () {
+            dispatch(signOutUser())
+
+        },
+
     }
 }
 

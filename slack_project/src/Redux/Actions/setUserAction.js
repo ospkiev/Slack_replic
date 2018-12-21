@@ -6,3 +6,10 @@ export const setUser = user => ({
         currentUser: user,
     }
 })
+
+export const signOutUser = () => ({
+    type: actionTypes.SIGNOUT_USER,
+    data: {
+        currentUser: '',
+    }
+})

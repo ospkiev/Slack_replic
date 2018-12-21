@@ -12,6 +12,12 @@ const user = (state = initialUserState, action) => {
                 currentUser: action.data.currentUser,
                 isLoading: false,
             }
+
+        case actionTypes.SIGNOUT_USER:
+            return {
+                currentUser: null,
+                isLoading: false,
+            }
         default:
             return state;
     }
