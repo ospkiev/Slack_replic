@@ -3,16 +3,53 @@ import { Menu, Icon, Header, Button, Input, Modal, Form } from 'semantic-ui-reac
 import firebase from '../Firebase/Firebase';
 import { withRouter } from 'react-router-dom';
 import { connect } from 'react-redux';
+import { setCurrentChannel } from '../Redux/Actions/setUserAction'
 import { Fragment } from 'react';
 
 class Channels extends Component {
     state = {
         channels: [],
+        activeChannels: '',
         modal: false,
         title: '',
         description: '',
         channelsRef: firebase.database().ref('channels'),
         errors: [],
+        firstLoad: true,
+    }
+
+    componentDidMount() {
+        this.addListeners();
+    }
+
+    
+
+    addListeners = () => {
+        let loadedChannels = [];
+        this.state.channelsRef.on('child_added', snap => {
+            loadedChannels.push(snap.val())
+            console.log(loadedChannels);
+            this.setState({
+                channels: loadedChannels
+            }, () => { this.loadFirstChannel() })
+        })
+    }
+
+    showActiveChannel = (params) => {
+        this.setState({
+            activeChannels: params.id
+        })
+
+    }
+
+    loadFirstChannel = () => {
+        if (this.state.firstLoad && this.state.channels.length > 0) {
+            this.props.setCurrentChannel(this.state.channels[0]);
+            this.showActiveChannel(this.state.channels[0]);
+        }
+        this.setState({
+            firstLoad: false,
+        })
     }
 
     showModal = () => {
@@ -60,7 +97,6 @@ class Channels extends Component {
         if (this.isFormValid(this.state)) {
             // console.log('object');
             this.addChannel();
-
         }
     }
 
@@ -100,6 +136,11 @@ class Channels extends Component {
                     <Menu.Item>
                         <span><Icon name='exchange' />CHANNELS</span>({channels.length})<Icon name='add' onClick={this.showModal} />
                     </Menu.Item>
+                    {channels.length > 0 && channels.map(channel => (
+                        <Menu.Item key={channel.id} name={channel.name} style={{ opacity: 0.7 }}
+                            onClick={() => (this.props.setCurrentChannel(channel) , this.showActiveChannel(channel))}
+                            active={channel.id === this.state.activeChannels}> #{channel.name}</Menu.Item>
+                    ))}
                 </Menu.Menu>
                 <Modal open={modal} style={{ background: 'green' }} onClose={this.showModal}>
                     <Modal.Header name='add_channel'>Add channel
@@ -123,11 +164,17 @@ class Channels extends Component {
 function mapStateToProps(state) {
     return {
         currentUser: state.user.currentUser,
+        // activeChannel: this.state.activeChannels
 
     }
 }
 
+function mapDispatchToProps(dispatch) {
+    return {
+        setCurrentChannel: function (params) {
+            dispatch(setCurrentChannel(params));
+        }
+    }
+}
 
-
-export default withRouter(connect(mapStateToProps, null)(Channels));
-// export default Channels;
+export default withRouter(connect(mapStateToProps, mapDispatchToProps)(Channels));

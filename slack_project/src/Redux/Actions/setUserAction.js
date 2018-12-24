@@ -14,3 +14,8 @@ export const signOutUser = () => ({
         isLoading: false,
     }
 })
+
+export const setCurrentChannel = channel => ({
+    type: actionTypes.SET_CURRENT_CHANNEL,
+    data: channel,
+})
