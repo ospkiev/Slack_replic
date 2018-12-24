@@ -1,7 +1,9 @@
 import React, { Component } from 'react';
 import { Segment, Header, Icon, Subheader, Input } from 'semantic-ui-react';
+import firebase from 'firebase';
 
 class MessageHeader extends Component {
+
     render() {
         return (
             <Segment clearing>

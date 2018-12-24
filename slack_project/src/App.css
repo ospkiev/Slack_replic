@@ -3,3 +3,8 @@ html,body, .app{
   padding: 1rem;
   background-color: azure;
 }
+
+.messages{
+  height: 380px;
+  overflow-y: scroll;
+}

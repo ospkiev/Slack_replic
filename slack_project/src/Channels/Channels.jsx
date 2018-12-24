@@ -22,11 +22,11 @@ class Channels extends Component {
         this.addListeners();
     }
 
-    componentWillMount(){
+    componentWillMount() {
         this.removeListeners();
     }
 
-    removeListeners=()=>{
+    removeListeners = () => {
         this.state.channelsRef.off();
     }
 
@@ -144,7 +144,7 @@ class Channels extends Component {
                     </Menu.Item>
                     {channels.length > 0 && channels.map(channel => (
                         <Menu.Item key={channel.id} name={channel.name} style={{ opacity: 0.7 }}
-                            onClick={() => (this.props.setCurrentChannel(channel) , this.showActiveChannel(channel))}
+                            onClick={() => (this.props.setCurrentChannel(channel), this.showActiveChannel(channel))}
                             active={channel.id === this.state.activeChannels}> #{channel.name}</Menu.Item>
                     ))}
                 </Menu.Menu>
