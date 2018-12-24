@@ -36,14 +36,11 @@ class MessageForm extends Component {
     sendMessage = () => {
         const { messagesRef, currentChannel } = this.props;
         const { message } = this.state;
-
-
         if (message) {
             this.setState({ loading: true, })
-            console.log(currentChannel.id);
-            console.log(messagesRef);
+            // console.log(currentChannel.id);
+            // console.log(messagesRef);
             messagesRef
-
                 .child(currentChannel.id)
                 .push()
                 .set(this.createMessage())
@@ -63,17 +60,16 @@ class MessageForm extends Component {
     }
 
     render() {
-
-
         // console.log(message);
         return (
             <Segment className='message_form'>
-                <Input fluid name='message' style={{ marginbottom: '0.7rem' }} lable={< Button icon='add' />}
+                <Input fluid name='message' style={{ marginbottom: '0.7rem' }}
+                    // lable={< Button icon='add' />}
+                    label={<Button icon='add' />}
                     lableposition='left' placeholder='Write your message' onChange={this.handleChange} />
                 <Button.Group icon widths='2'>
                     <Button color='orange' content='Add Reply' lablePosition='left' icon='edit' onClick={this.sendMessage} />
                     <Button color='teal' content='Upload media' lablePosition='right' icon='cloud upload' />
-
                 </Button.Group >
             </Segment>
         );
