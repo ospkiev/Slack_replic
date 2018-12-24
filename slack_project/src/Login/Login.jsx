@@ -6,6 +6,7 @@ import md5 from 'md5';
 
 
 class Login extends Component {
+
     state = {
         username: '',
         email: '',
@@ -43,6 +44,9 @@ class Login extends Component {
             })
             return false;
         } else {
+            this.setState({
+                errors: []
+            })
             return true;
         }
     }
@@ -65,6 +69,7 @@ class Login extends Component {
                     console.log(err);
                     this.setState({
                         errors: this.state.errors.concat(err),
+                        loading: false
                     })
                 })
         }

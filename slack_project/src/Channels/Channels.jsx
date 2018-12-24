@@ -36,8 +36,8 @@ class Channels extends Component {
                 <Modal open={modal} style={{ background: 'green' }} onClose={this.showModal}>
                     <Modal.Header name='add_channel'>Add channel
                         <Modal.Content name='content'>
-                            <Form.Input name='title' type='text' onChange={this.inputHandler} />
-                            <Form.Input name='description' type='text' onChange={this.inputHandler} />
+                            <Form.Input name='title' fluid type='text' onChange={this.inputHandler} placeholder='Enter name' />
+                            <Form.Input name='description' fluid type='text' onChange={this.inputHandler} placeholder='Enter description' />
                         </Modal.Content>
                     </Modal.Header>
 
