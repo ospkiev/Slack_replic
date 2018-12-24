@@ -22,7 +22,13 @@ class Channels extends Component {
         this.addListeners();
     }
 
-    
+    componentWillMount(){
+        this.removeListeners();
+    }
+
+    removeListeners=()=>{
+        this.state.channelsRef.off();
+    }
 
     addListeners = () => {
         let loadedChannels = [];
