@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import { Menu, Icon } from 'semantic-ui-react'
 import firebase from '../Firebase/Firebase';
 import { connect } from 'react-redux';
+import {setPrivatChannel, setCurrentChannel} from '../Redux/Actions/setUserAction';
+
 
 class DirectMessages extends Component {
     state = {
@@ -9,14 +11,14 @@ class DirectMessages extends Component {
         usersRef: firebase.database().ref('users'),
         connectedRef:firebase.database().ref('.info/connected'),
         onlineRef : firebase.database().ref('onlineUsers'),
-    }
+    };
 
     componentDidMount() {
         if (this.props.user) {
             this.addListener(this.props.user.currentUser.uid)
         }
         // console.log(this.props.user);
-    }
+    };
 
 
     addListener = id => {
@@ -56,7 +58,7 @@ class DirectMessages extends Component {
                 this.setUserStatus( snap.key , false);
             }
         })
-    }
+    };
 
     setUserStatus = ( id ,status =true) => {
         const updateUsers = this.state.users.map( el => {
@@ -67,7 +69,22 @@ class DirectMessages extends Component {
         this.setState({
             users:updateUsers,
         })
-    }
+    };
+
+    changeChannel = user =>{
+        const channelId = this.getChannelId(user.uid);
+        const channelData={
+            id: channelId,
+            name: user.name,
+        };
+        this.props.setCurrentChannel(channelData);
+        this.props.setPrivatChannel(true);
+    };
+
+    getChannelId = userId =>{
+        const currentUserId = this.props.user.uid;
+        return userId < currentUserId ? `${userId}/${currentUserId}` : `${currentUserId}/${userId}`;
+    };
 
 
     render() {
@@ -80,7 +97,7 @@ class DirectMessages extends Component {
                         <Icon name='mail' /> Direct Message
          </span>({users.length})
            
-         {users.length > 0 && users.map(el => <Menu.Item key={el.uid} onClick={() => console.log(el)} style={{ opacity: 0.7, fontstyle:'italic'}}>
+         {users.length > 0 && users.map(el => <Menu.Item key={el.uid} onClick={()=>this.changeChannel(el)} style={{ opacity: 0.7, fontstyle:'italic'}}>
          <Icon name='circle' color={el.status === 'online' ? 'green' : 'red'}/> @ {el.name} </Menu.Item>)}
                 </Menu.Item>
             </Menu.Menu>
@@ -94,4 +111,19 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps, null)(DirectMessages);
+// function mapDispatchToProps(dispatch) {
+//     return {
+//         setUser: function (user) {
+//             dispatch(setUser(user))
+
+//         },
+
+//         signOutUser: function (user) {
+//             dispatch(signOutUser(user))
+
+//         },
+
+//     }
+// }
+
+export default connect(mapStateToProps,{setCurrentChannel,setPrivatChannel})(DirectMessages);

@@ -17,17 +17,55 @@ class Message extends Component {
         inputValue: '',
     }
 
+    // addListener = channelId => {
+    //     let loadedMessages = [];
+    //     this.state.messagesRef.child(channelId).on('val', snap => {
+    //         if (snap.exists()) {
+    //             this.state.messagesRef.child(channelId).on('child_added', snap => {
+    //                 loadedMessages.push(snap.val())
+    //                 this.setState({
+    //                     messages: loadedMessages,
+    //                     loading: false,
+    //                 }, () => this.countUnicUsers(loadedMessages))
+    //                 // this.countUnicUsers(loadedMessages)
+    //             } else {
+    //                     this.setState({
+    //                         messages: [],
+    //                         loadeding: false,
+    //                     })
+    //                 }
+
+    //         }
+    //     }
+    //     )
+    // }
+
+
     addListener = channelId => {
         let loadedMessages = [];
-        this.state.messagesRef.child(channelId).on('child_added', snap => {
-            loadedMessages.push(snap.val())
-            this.setState({
-                messages: loadedMessages,
-                loading: false,
-            })
-            this.countUnicUsers(loadedMessages)
+
+        // this.state.messagesRef.child(channelId).on('value', snap => console.log(snap.exists()))
+
+        this.state.messagesRef.child(channelId).on('value', snap => {
+            if (snap.exists()) {
+                this.state.messagesRef.child(channelId).on('child_added', snap => {
+                    // console.log('aaaaa')
+                    loadedMessages.push(snap.val())
+                    this.setState({
+                        messages: loadedMessages,
+                        loading: false,
+                    }, () => this.countUnicUsers(this.state.messages))
+                })
+            } else {
+                this.setState({
+                    messages: [],
+                    loading: false,
+                }, () => this.countUnicUsers(this.state.messages))
+            }
         })
     }
+
+
 
     componentDidMount() {
         setTimeout(() => {
@@ -36,9 +74,17 @@ class Message extends Component {
                 // console.log(currentChannel);
                 this.addListener(currentChannel.id)
             }
-
         }, 1000)
+    }
 
+    componentDidUpdate(prevProps) {
+        if (prevProps.currentChannel && this.props.currentChannel) {
+            // console.log('object');
+            if (prevProps.currentChannel.name !== this.props.currentChannel.name) {
+                // console.log('2222');
+                this.addListener(this.props.currentChannel.id)
+            }
+        }
     }
 
     countUnicUsers = messages => {
