@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { Segment, Header, Icon, Subheader, Input } from 'semantic-ui-react';
-import firebase from 'firebase';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
+
 
 class MessageHeader extends Component {
 
@@ -9,12 +11,12 @@ class MessageHeader extends Component {
             <Segment clearing>
                 <Header fluid='true' as='h2' floated='left' style={{ marginBottom: 0 }}>
                     <span>
-                        Channel
-         <Icon name='star outline' color='black' />
+                        {this.props.currentChannel ? this.props.currentChannel.name : 'Channel'}
+                        <Icon name='star outline' color='black' />
                     </span>
                     <Header.Subheader>
-                        2 users
-     </Header.Subheader>
+                        {this.props.countUser}
+                    </Header.Subheader>
                 </Header>
                 <Header floated='right'>
                     <Input size='mini' icon='search' name='searchTerm' placeholder='Search' />
@@ -24,4 +26,12 @@ class MessageHeader extends Component {
     }
 }
 
-export default MessageHeader;
+function mapStateToProps(state) {
+    return {
+        // currentUser: state.user.currentUser,
+        currentChannel: state.channel,
+
+    }
+}
+
+export default withRouter(connect(mapStateToProps, null)(MessageHeader));

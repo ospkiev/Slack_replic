@@ -13,6 +13,7 @@ class Message extends Component {
         messagesRef: firebase.database().ref('messages'),
         messages: [],
         loading: true,
+        countUser: '',
     }
 
     addListener = channelId => {
@@ -23,6 +24,7 @@ class Message extends Component {
                 messages: loadedMessages,
                 loading: false,
             })
+            this.countUnicUsers(loadedMessages)
         })
     }
 
@@ -38,11 +40,24 @@ class Message extends Component {
 
     }
 
+    countUnicUsers = messages => {
+        const uniqueUsers = messages.reduce((acc, el) => {
+            if (!acc.includes(el.user.name)) {
+                acc.push(el.user.name)
+            }
+            return acc
+        }, [])
+        this.setState({
+            countUser: `${uniqueUsers.length} users`
+        })
+    }
+
+
     render() {
-        const { messagesRef, messages } = this.state
+        const { messagesRef, messages, countUser } = this.state
         return (
             <React.Fragment>
-                <MessageHeader />
+                <MessageHeader countUser={countUser} />
                 <Segment>
                     <Comment.Group className='messages'>
                         {messages.length > 0 && messages.map(
