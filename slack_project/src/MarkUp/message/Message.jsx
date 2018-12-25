@@ -30,7 +30,7 @@ class Message extends Component {
         setTimeout(() => {
             const { currentChannel, currentUser } = this.props;
             if (currentChannel && currentUser) {
-                console.log(currentChannel);
+                // console.log(currentChannel);
                 this.addListener(currentChannel.id)
             }
 
