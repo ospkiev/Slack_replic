@@ -19,7 +19,7 @@ class MessageHeader extends Component {
                     </Header.Subheader>
                 </Header>
                 <Header floated='right'>
-                    <Input size='mini' icon='search' name='searchTerm' placeholder='Search' />
+                    <Input size='mini' icon='search' name='searchTerm' placeholder='Search' onChange={this.props.inputFunction} />
                 </Header>
             </Segment>
         );
