@@ -111,19 +111,6 @@ function mapStateToProps(state) {
     }
 }
 
-// function mapDispatchToProps(dispatch) {
-//     return {
-//         setUser: function (user) {
-//             dispatch(setUser(user))
 
-//         },
-
-//         signOutUser: function (user) {
-//             dispatch(signOutUser(user))
-
-//         },
-
-//     }
-// }
 
 export default connect(mapStateToProps,{setCurrentChannel,setPrivatChannel})(DirectMessages);

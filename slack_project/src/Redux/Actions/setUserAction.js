@@ -24,3 +24,11 @@ export const setPrivatChannel = isPrivatChannel => ({
     type: actionTypes.SET_PRIVAT_CHANNEL,
     data: isPrivatChannel,
 })
+
+export const setColors = (colorPrim, colorSec) => ({
+    type: actionTypes.SET_COLORS,
+    data: {
+        colorPrim: colorPrim,
+        colorSec: colorSec
+    }
+})

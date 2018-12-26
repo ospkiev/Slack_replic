@@ -3,6 +3,8 @@ import { Sidebar, Menu, Button, Divider, Modal, Icon, Label, Segment } from 'sem
 import firebase from '../../Firebase/Firebase';
 import { connect } from 'react-redux';
 import { TwitterPicker } from 'react-color';
+import { setColors } from '../../Redux/Actions/setUserAction'
+
 
 class ColorPanel extends Component {
 
@@ -10,8 +12,25 @@ class ColorPanel extends Component {
         modal: false,
         primary: '',
         secondary: '',
-        userRef: firebase.database().ref('users')
+        userRef: firebase.database().ref('users'),
+        userColors: [],
     };
+
+    componentDidMount() {
+        if (this.props.user) {
+            this.addListener(this.props.user.currentUser.uid)
+        }
+    }
+
+    addListener = userId => {
+        let userColors = [];
+        this.state.userRef.child(`${userId}/colors`).on('child_added', snap => {
+            userColors.unshift(snap.val());
+            this.setState({
+                userColors
+            })
+        })
+    }
 
     openModal = () => this.setState({ modal: true });
 
@@ -47,15 +66,29 @@ class ColorPanel extends Component {
         }
     }
 
+    displayUserColors = colors =>
+        colors.length > 0 && colors.map((color, i) => (
+            <React.Fragment key={i}>
+
+                <Divider />
+                <div className='color__container' onClick={() => this.props.setColors(color.primary, color.secondary)}>
+                    <div className='color__square' style={{ background: color.primary }}>
+                        <div className='color__overlay' style={{ background: color.secondary }} />
+                    </div>
+                </div>
+            </React.Fragment>
+        ));
+
 
 
 
     render() {
-        const { modal, primary, secondary } = this.state;
+        const { modal, primary, secondary, userColors } = this.state;
         return (
             <Sidebar as={Menu} icon='labeled' inverted visible vertical width='very thin'>
                 <Divider />
                 <Button icon='add' size='small' color='blue' onClick={this.openModal} />
+                {this.displayUserColors(userColors)}
 
                 <Modal basic open={modal} >
                     <Modal.Header>
@@ -92,4 +125,14 @@ function mapStateToProps(state) {
     }
 }
 
-export default connect(mapStateToProps)(ColorPanel);
+function mapDispatchToProps(dispatch) {
+    return {
+        setColors: function (colorPrim, colorSec) {
+            dispatch(setColors(colorPrim, colorSec))
+
+        }
+    }
+}
+
+
+export default connect(mapStateToProps, mapDispatchToProps)(ColorPanel);

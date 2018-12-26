@@ -3,3 +3,5 @@ export const SIGNOUT_USER = 'SIGNOUT_USER';
 
 export const SET_CURRENT_CHANNEL = 'SET_CURRENT_CHANNEL';
 export const SET_PRIVAT_CHANNEL = 'SET_PRIVAT_CHANNEL';
+
+export const SET_COLORS = 'SET_COLORS';
