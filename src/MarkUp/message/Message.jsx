@@ -129,9 +129,9 @@ class Message extends Component {
                 <Segment>
                     <Comment.Group className='messages'>
                         {filterMessage.length > 0 && inputValue.length !== ''
-                            ? filterMessage.map(i => <SingleMessage key={i.time} message={i} user={i.user} />)
+                            ? filterMessage.map(i => <SingleMessage key={i.time} message={i} user={i.user} currentUser={this.props.currentUser} />)
                             : messages.length > 0 && messages.map(
-                                message => <SingleMessage key={message.time} message={message} user={message.user} />)}
+                                message => <SingleMessage key={message.time} message={message} user={message.user} currentUser={this.props.currentUser} />)}
                     </Comment.Group>
                 </Segment>
                 <MessageForm messagesRef={messagesRef} />

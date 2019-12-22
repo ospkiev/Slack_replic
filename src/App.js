@@ -9,9 +9,12 @@ import Message from './MarkUp/message/Message';
 import './App.css';
 
 const App = () => {
-  console.log(this.props.colors); /// need fix
+  // console.log(this.props.colors); /// need fix
   return (
-    <Grid columns='equal' className='app' style={{ background: this.props.colors.colorSec }}>
+    <Grid columns='equal' className='app' style={{
+      background: '#fff'
+      // this.props.colors.colorSec
+    }}>
 
       <ColorPanel />
       <SidePanel />

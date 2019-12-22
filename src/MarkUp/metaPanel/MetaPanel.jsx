@@ -16,7 +16,7 @@ class MetaPanel extends Component {
 
 
     render() {
-        console.log(this.props.channel);
+        // console.log(this.props.channel);
         const { activeIndex } = this.state;
         if (this.props.channel) {
             if (this.props.channel.isPrivatChannel) {
